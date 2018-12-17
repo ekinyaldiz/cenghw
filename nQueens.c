@@ -21,12 +21,6 @@ int **dynamicSquareMatrix(int N){
         }
     }
     //Check point:
-    for(i=0;i<N;i++) {
-        for(j=0;j<N;j++) {
-            printf("%d ",matrix[i][j]);
-        }
-        printf("\n");
-    }
     return matrix;
 }
 //Given arguments represent
@@ -52,46 +46,59 @@ bool isSafe(int **board, int size, int row, int col) {
     return true;
 }
 
-int placeQueen(int **board, int pos, int n) {
-    //Base Case 1:
-    if(board[n-1][0] == 0) {
-        if(j==n)
-            printBoard() //TODO Prepare the printBoard function :D //Printboard one last time
-            return 1;
-        for(board[n-1][n-1] == 0)
-    }
-    //Checking possible positions within the row
-    i=0; j=0;
-    while(j<n) {
-        if(isSafe) {
-            matrix[i][j] = 1;
-            i=0; j++;
-            //continue
-        }
-        else {
-            if(i<n-1)
-            i++;
-            else {  //Meaning we have come to EOL
-            i=0; j++;
+void printBoard(int **board, int n) {
+        int i,k;
+        for(i=0; i<n; i++) {
+            for(k=0; k<n; k++) {
+                printf("%d ",board[i][k]);
             }
+            printf("\n");
         }
-    }
-    /*TODO if safe, place the queen then return itself with the next column
-     * if NOT safe, renounce (lol) the last queen of its position.
-     * Remember that these are all matrix manipulations. 
-     * When reached the end of the board, if we do have a solution, we print.
-     * If not we backtrack without any outputs whatsoever.
-     */
-
+        printf("\n\n");
 }
 
+/*
+void insertQueen(int **board, int n, int row, int col) {
+    //If we are to exceed the positions,
+    //means we are out of probabilities.
+    if((col==0) && (row==n))
+    //If a solution is found
+    if(col==n) {
+        printBoard(board, n);
+    }
+    //If solution is not found within the column
+    if(row==n) {
+        int i=1;
+        //Iterate until the nonzero element is found.
+        do {
+            row-=i;
+        } while(!board[row][col-1]);
+
+        board[row][col-1] = 0;
+        return (insertQueen(board, n, row+1, col-1));
+    }
+    int i,j;
+    if(isSafe(board, n, row, col)) {
+        board[row][col] = 1;
+        return insertQueen(board, n, 0, col+1);
+    }
+    else {
+        row++; 
+        return insertQueen(board, n, row, col);
+    }
+}
+*/
 int main() {
-    int n, **matrix;
+    int n, **board;
     bool a;
     printf("Enter the size of the chess board in integer value\n");
     scanf("%d",&n);
-    matrix = dynamicSquareMatrix(n);
-    a = isSafe(matrix, n,3,3);
-    printf("%d",a);
+    if(n<4) {
+        printf("There are no solutions for the given dimensions.\n");
+        return 0;
+    }
+    board = dynamicSquareMatrix(n);
+    printBoard(board, n);
+//    insertQueen(board, n, 0, 0);
 //TODO Free memory
 }
