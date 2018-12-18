@@ -57,37 +57,54 @@ void printBoard(int **board, int n) {
         printf("\n\n");
 }
 
-/*
-void insertQueen(int **board, int n, int row, int col) {
-    //If we are to exceed the positions,
-    //means we are out of probabilities.
-    if((col==0) && (row==n))
-    //If a solution is found
+//Deletes the nonzero element off of the column and returns which row it was in
+int refreshColumn(int **board, int n, int col) {
+    int row=n-1;
+    while(!board[row][col]) {
+        row--;
+    }
+    board[row][col] = 0;
+    return row;
+}
+
+void anotherQueen(int **board, int n, int row, int col) {
+    if(row==n) {
+        if(col==0) {    //Out of solutions nad backtracking
+            return;
+        }
+        else {
+            col--;
+            while(!board[row-1][col]) { //We go upward until we find a nonzero element
+                row--;
+            }
+            board[row-1][col] = 0;
+            return anotherQueen(board, n, row, col); //Backtrack, try for the downer cell.
+        }
+    }
+    //In this case a solution is found
     if(col==n) {
         printBoard(board, n);
+        col--;
+        refreshColumn(board, n, col);
+        row = refreshColumn(board, n, col-1); //backtracking to find another solution
+        if(row==n-1) {
+            refreshColumn(board, n, col);
+            col--;
+            row = refreshColumn(board, n, col);
+            return(anotherQueen(board, n, row+1, col));
+        }
+    
     }
-    //If solution is not found within the column
-    if(row==n) {
-        int i=1;
-        //Iterate until the nonzero element is found.
-        do {
-            row-=i;
-        } while(!board[row][col-1]);
-
-        board[row][col-1] = 0;
-        return (insertQueen(board, n, row+1, col-1));
-    }
-    int i,j;
     if(isSafe(board, n, row, col)) {
-        board[row][col] = 1;
-        return insertQueen(board, n, 0, col+1);
+        board[row][col] = 1;         
+        col++;
+        return anotherQueen(board, n, 0, col);
     }
     else {
-        row++; 
-        return insertQueen(board, n, row, col);
+        row++;
+        return anotherQueen(board, n, row, col);
     }
 }
-*/
 int main() {
     int n, **board;
     bool a;
@@ -98,7 +115,7 @@ int main() {
         return 0;
     }
     board = dynamicSquareMatrix(n);
-    printBoard(board, n);
+    anotherQueen(board, n, 0, 0);
 //    insertQueen(board, n, 0, 0);
 //TODO Free memory
 }
