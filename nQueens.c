@@ -32,7 +32,7 @@ bool isSafe(int **board, int size, int row, int col) {
     for(i=0; i<col; i++) {              //Note that, no need to check the columns, since
         if(board[row][i])               // we are not to yet have placed any queens on the column.
             return false;  
-            }
+    }
     //Checking the upper-left diagonal
     for(i=row-1, j=col-1; i>=0 && j>=0; i--, j--) {
         if(board[i][j])
@@ -74,11 +74,8 @@ void anotherQueen(int **board, int n, int row, int col) {
         }
         else {
             col--;
-            while(!board[row-1][col]) { //We go upward until we find a nonzero element
-                row--;
-            }
-            board[row-1][col] = 0;
-            return anotherQueen(board, n, row, col); //Backtrack, try for the downer cell.
+            row = refreshColumn(board, n, col);
+            return anotherQueen(board, n, row+1, col); //Backtrack, try for the downer cell.
         }
     }
     //In this case a solution is found
@@ -86,14 +83,17 @@ void anotherQueen(int **board, int n, int row, int col) {
         printBoard(board, n);
         col--;
         refreshColumn(board, n, col);
-        row = refreshColumn(board, n, col-1); //backtracking to find another solution
-        if(row==n-1) {
-            refreshColumn(board, n, col);
-            col--;
-            row = refreshColumn(board, n, col);
-            return(anotherQueen(board, n, row+1, col));
-        }
-    
+        col--;
+        row = refreshColumn(board, n, col);
+        return anotherQueen(board, n, row+1, col);
+        //backtracing to find another solution
+        //Do we need this? Doesn't it get done automatically
+            //if(row==n-1) {
+            //refreshColumn(board, n, col);
+            //col--;
+            //row = refreshColumn(board, n, col);
+            //return(anotherQueen(board, n, row+1, col));
+        
     }
     if(isSafe(board, n, row, col)) {
         board[row][col] = 1;         
