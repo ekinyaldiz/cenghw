@@ -16,7 +16,7 @@ struct Stack {
 //
 
 struct Stack *makeStack(int size) {
-    struct Stack *stack = (struct Stack*) malloc(sizeof(struck Stack));
+    struct Stack *stack = (struct Stack*) malloc(sizeof(struct Stack));
     stack->top = -1; //Empty stack
     stack->size = size;
     stack->array = (int *) malloc(sizeof(int)*stack->size);
@@ -61,7 +61,7 @@ int pop(struct Stack *stack) {
 //
 //Evaluation Operations
 //
-int operatorPres(char sth) {
+int operatorPrec(char sth) {
     if(sth=='+' || sth=='-')
         return 1;
     if(sth=='*' || sth=='/')
@@ -78,32 +78,45 @@ int isOperand(char sth) {
 //The whole thing!
 int infix2Postfix(char * infix) {
     struct Stack *stack = makeStack(strlen(infix));
-    
     int i;
 
     for(i=0; i<strlen(infix); i++) {
         if(isOperand(infix[i])) {
-            printf("%c", infix[i]);                
+            printf("%c ", infix[i]);                
         return 0;
         }
 
         else if(infix[i] == '(')
             push(stack, infix[i]);
 
-        else if(infix[i] == '(') {
-            while(!(isEmpty)) {
-                //TODO find somewhere to pop it to :D
-                =pop(stack);
+        else if(infix[i] == ')') {
+            while((stack->top!='(')) {
+                printf("%c ", pop(stack));
             }
+            printf("%c", pop(stack));
         }
+        else {
+            while(!isEmpty(stack) && (operatorPrec(stack->top) >= operatorPrec(infix[i]))) {
+                printf("%c", pop(stack));        
+        }
+            push(stack, infix[i]);
 
+        }
+    
+    while(!isEmpty(stack)) {
+        printf("%c", pop(stack)); //Prints the "leftover" operators in the stack.
     }
 
+    }
 
 
 }
 
 int main() {
+    char *infix;
+    printf("Write an infix expression using no spaces.");
+    scanf("%c", infix);
+    infix2Postfix(infix);
 
     return 0;
 }
