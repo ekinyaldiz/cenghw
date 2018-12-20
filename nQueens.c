@@ -105,6 +105,7 @@ void anotherQueen(int **board, int n, int row, int col) {
         return anotherQueen(board, n, row, col);
     }
 }
+
 int main() {
     int n, **board;
     bool a;
