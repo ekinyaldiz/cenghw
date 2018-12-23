@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define maxString 250
-
 struct Stack {
     int top;
     int size;
@@ -26,7 +24,7 @@ struct Stack *makeStack(int size) {
 
 //Checks if the stack is full
 bool isFull(struct Stack *stack) {
-    if(stack->size-1 == stack->top)
+    if(stack->size-1 == stack->top) //No sense whatsoever. Top there is the value.
         return true;
     else
         return false;
@@ -50,7 +48,7 @@ bool push(struct Stack *stack, int data) {
 }
 
 //If the stack is not empty, pops the top off of the stack.
-int pop(struct Stack *stack) {
+int pop(struct Stack *stack) {
     if(isEmpty(stack))
         return -1;
     int popd = stack->top;
@@ -71,8 +69,10 @@ int operatorPrec(char sth) {
 }
 
 //Returns true if the character is a digit representation.
-int isOperand(char sth) {
-    return(sth >= '0' && sth <= '9');
+bool isOperand(char sth) {
+    if(sth >= '0' && sth <= '9')
+        return true;
+    else return false;
 }
 
 //The whole thing!
@@ -80,10 +80,9 @@ int infix2Postfix(char * infix) {
     struct Stack *stack = makeStack(strlen(infix));
     int i;
 
-    for(i=0; i<strlen(infix); i++) {
+    for(i=0; i<strlen(infix) - 1; i++) { //-1 since the length considers the null character at the end as well
         if(isOperand(infix[i])) {
             printf("%c ", infix[i]);                
-        return 0;
         }
 
         else if(infix[i] == '(')
@@ -96,20 +95,19 @@ int infix2Postfix(char * infix) {
             printf("%c", pop(stack));
         }
         else {
-            while(!isEmpty(stack) && (operatorPrec(stack->top) >= operatorPrec(infix[i]))) {
+            while(!isEmpty(stack) && (operatorPrec(stack->top) > operatorPrec(infix[i]))) {
                 printf("%c", pop(stack));        
         }
             push(stack, infix[i]);
 
         }
     
+    }
     while(!isEmpty(stack)) {
         printf("%c", pop(stack)); //Prints the "leftover" operators in the stack.
     }
-
-    }
-
-
+    
+return 0;
 }
 
 int main() {
